@@ -1,8 +1,8 @@
 ---
 galaxy_info:
   author: Richard Diphoorn
-  description: This role expands on the official Azure Resource Group module. It provides a ready made solution to use.
-               It includes a method to add multiple tags to a resource group and it makes use of a vault file, to authenticate against Azure.
+  description: This role expands on the official Azure Virtual Network module. It provides a ready made solution to use.
+               It includes a method to add multiple tags to a virtual network.
   company: rdtechie
   license: MIT
   min_ansible_version: 2.5

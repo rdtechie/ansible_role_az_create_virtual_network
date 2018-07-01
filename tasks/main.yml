@@ -1,17 +1,20 @@
 ---
-- name: Create Azure Resource Group
-  azure_rm_resourcegroup:
-    name: "{{ az_resource_group_name }}"
-    location: "{{ az_resource_group_location }}"
+- name: Ensure Virtual Network Exists
+  azure_rm_virtualnetwork:
+    name: "{{ az_virtual_network_name }}"
+    resource_group: "{{ az_resource_group }}"
     state: "present"
+    address_prefixes_cidr: "{{ item[1] }}"
     tenant: "{{ azure_tenant_id }}"
     subscription_id: "{{ azure_subscription_id }}"
     client_id: "{{ azure_client_id }}"
     secret: "{{ azure_client_secret }}"
-    tags: 
-      Owner: "{{ item.Owner }}"
-      Company: "{{ item.Company }}"
-      Project: "{{ item.Project }}"
-  with_items: "{{ azure_tags }}"
-  register: CreatedResourceGroup
+    tags:
+      Owner: "{{ item[0].Owner }}"
+      Company: "{{ item[0].Company }}"
+      Project: "{{ item[0].Project }}"
+  with_nested:
+    - "{{ azure_tags }}"
+    - "{{ az_virtual_network_address_prefixes_cidr }}"
+  register: CreatedVirtualNetwork
 ...
