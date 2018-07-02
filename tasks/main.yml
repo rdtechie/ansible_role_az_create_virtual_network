@@ -1,20 +1,19 @@
 ---
+- name: Set Azure Tags
+  set_fact: 
+    az_tags_dict: "{{ (az_tags_dict|default({}))|combine({item.key: item.value}) }}"
+  loop: "{{ azure_tags|dict2items }}"
+  
 - name: Ensure Virtual Network Exists
   azure_rm_virtualnetwork:
     name: "{{ az_virtual_network_name }}"
     resource_group: "{{ az_resource_group_name }}"
     state: "present"
-    address_prefixes_cidr: "{{ item[1] }}"
+    address_prefixes_cidr: "{{ az_virtual_network_address_prefixes_cidr }}"
     tenant: "{{ azure_tenant_id }}"
     subscription_id: "{{ azure_subscription_id }}"
     client_id: "{{ azure_client_id }}"
     secret: "{{ azure_client_secret }}"
-    tags:
-      Owner: "{{ item[0].Owner }}"
-      Company: "{{ item[0].Company }}"
-      Project: "{{ item[0].Project }}"
-  with_nested:
-    - "{{ azure_tags }}"
-    - "{{ az_virtual_network_address_prefixes_cidr }}"
+    tags: "{{ az_tags_dict }}"
   register: CreatedVirtualNetwork
 ...
